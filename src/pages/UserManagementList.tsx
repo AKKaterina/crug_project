@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,6 +16,10 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import { useNavigate } from "react-router-dom";
+import { get_users } from "../actions/get_users";
+import { delete_user } from "../actions/delete_user";
+import { useEffect, useState } from "react";
 
 interface TablePaginationActionsProps {
 	count: number;
@@ -96,27 +101,49 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 	);
 }
 
-function createData(id:number, name: string, email: string, phone: string) {
+function createData(id: string, name: string, email: string, phone: string) {
 	return { id, name, email, phone };
 }
 
 const rows = [
-	createData(1, "Cupcake", "email", "phone"),
-	createData(2, "Donut", "email", "phone"),
-	createData(3, "Eclair", "email", "phone"),
-	createData(4, "Frozen yoghurt", "email", "phone"),
-	createData(5, "Gingerbread", "email", "phone"),
-	createData(6, "Honeycomb", "email", "phone"),
-	createData(7, "Ice cream sandwich", "email", "phone"),
-	createData(8, "Jelly Bean", "email", "phone"),
-	createData(9, "KitKat", "email", "phone"),
-	createData(10, "Lollipop", "email", "phone"),
-	createData(11, "Marshmallow", "email", "phone"),
-	createData(12, "Nougat", "email", "phone"),
-	createData(13, "Oreo", "email", "phone"),
+	createData("1", "Cupcake", "email", "phone"),
+	createData("2", "Donut", "email", "phone"),
+	createData("3", "Eclair", "email", "phone"),
+	createData("4", "Frozen yoghurt", "email", "phone"),
+	createData("5", "Gingerbread", "email", "phone"),
+	createData("6", "Honeycomb", "email", "phone"),
+	createData("7", "Ice cream sandwich", "email", "phone"),
+	createData("8", "Jelly Bean", "email", "phone"),
+	createData("9", "KitKat", "email", "phone"),
+	createData("10", "Lollipop", "email", "phone"),
+	createData("11", "Marshmallow", "email", "phone"),
+	createData("12", "Nougat", "email", "phone"),
+	createData("13", "Oreo", "email", "phone"),
 ].sort((a, b) => (a.id < b.id ? -1 : 1));
 
 export const UserManagementList = () => {
+	const navigate = useNavigate();
+
+	const handleEditClick = () => {
+		navigate('/edit');
+	};
+	
+	const [users, setUsers] = useState([]);
+	useEffect(() => {
+		async function fetchUsers() {
+			try {
+				const response = await get_users();
+				if (response.status === 200) {
+					setUsers(response.data);
+				}
+				// console.log(response.data)
+			} catch (error) {
+				console.error("Error fetching");
+			}
+		}
+		fetchUsers();
+	}, []);
+
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -152,7 +179,7 @@ export const UserManagementList = () => {
 				</TableHead>
 				<TableBody>
 					{(rowsPerPage > 0
-						? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+						? users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 						: rows
 					).map((row) => (
 						<TableRow key={row.name}>
@@ -167,7 +194,10 @@ export const UserManagementList = () => {
 								{row.phone}
 							</TableCell>
 							<TableCell style={{ width: 160 }} align="right">
-								
+								<Button variant="outlined" onClick={() => delete_user(row.id)}>
+									Delete
+								</Button>
+								<Button variant="contained" onClick = {handleEditClick}>Update</Button>
 							</TableCell>
 						</TableRow>
 					))}

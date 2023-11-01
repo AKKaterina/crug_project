@@ -10,6 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
 	return (
@@ -33,6 +34,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export const Login = () => {
+	const navigate = useNavigate();
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
@@ -40,6 +42,7 @@ export const Login = () => {
 			email: data.get("email"),
 			password: data.get("password"),
 		});
+		navigate("/loged");
 	};
 
 	return (
@@ -70,16 +73,6 @@ export const Login = () => {
 							margin="normal"
 							required
 							fullWidth
-							id="name"
-							label="Full Name"
-							name="name"
-							autoComplete="name"
-							autoFocus
-						/>
-						<TextField
-							margin="normal"
-							required
-							fullWidth
 							id="email"
 							label="Email Address"
 							name="email"
@@ -90,11 +83,11 @@ export const Login = () => {
 							margin="normal"
 							required
 							fullWidth
-							id="phone"
-							label="Phone Number"
-							name="phone"
-							autoComplete="phone"
-							autoFocus
+							name="password"
+							label="Password"
+							type="password"
+							id="password"
+							autoComplete="current-password"
 						/>
 						<Button
 							type="submit"

@@ -3,11 +3,12 @@ import { Login } from "./pages/Login";
 import { Registration } from "./pages/Registration";
 import { UserManagementList } from "./pages/UserManagementList";
 import { Error } from "./pages/Error";
+import { Edit } from "./pages/Edit";
 import "./App.css";
 
 const router = createBrowserRouter([
 	{
-		path: "/login",
+		path: "/",
 		element: <Login />,
 		errorElement: <Error />,
 	},
@@ -17,8 +18,13 @@ const router = createBrowserRouter([
         errorElement: <Error />,
 	},
 	{
-		path: "/",
+		path: "/loged",
 		element: <UserManagementList />,
+        errorElement: <Error />,
+	},
+	{
+		path: "/edit",
+		element: <Edit />,
         errorElement: <Error />,
 	},
 ]);
